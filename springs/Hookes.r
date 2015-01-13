@@ -1,0 +1,1 @@
+Hookes <- function(x) -k*x
