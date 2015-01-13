@@ -16,6 +16,10 @@ springDynamics()
 ## Hookes 2 spring ##
 springDynamics(TRUE)
 
+## Non-Linear ##
+springDynamics(springFUN='exponentialSpring')
 
+## Non-Linear ##
+springDynamics(TRUE,springFUN='exponentialSpring')
 
 dev.off()
