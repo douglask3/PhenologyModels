@@ -1,25 +1,32 @@
 source("libs/plotPhen.r")
 source("libs/springDynamics.r")
 source("springs/Hookes.r")
+source("forcing/constant.r")
+source("forcing/dampend.r")
 
 source("springs/exponentialSpring.r")
 
-nt=2000; dt=0.01;
+nt=400; dt=0.1;
 Fw=1; m=1; k=1;
 
-pdf("Springs.pdf",height=12,width=4)
-par(mfrow=c(4,1))
+pdf("Springs.pdf",height=12,width=12)
+par(mfrow=c(4,2))
+
+springDynamicss <- function(...) {
+    springDynamics(...)
+    springDynamics(waterFun='Dampend',...)
+}
 
 ## Hookes 1 spring ##
-springDynamics()
+springDynamicss()
 
 ## Hookes 2 spring ##
-springDynamics(TRUE)
+springDynamicss(TRUE)
 
 ## Non-Linear ##
-springDynamics(springFUN='exponentialSpring')
+springDynamicss(springFUN='exponentialSpring')
 
 ## Non-Linear ##
-springDynamics(TRUE,springFUN='exponentialSpring')
+springDynamicss(TRUE,springFUN='exponentialSpring')
 
 dev.off()
