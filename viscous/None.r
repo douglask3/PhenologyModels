@@ -1,0 +1,1 @@
+None <- function(v,x) 0

@@ -1,0 +1,1 @@
+SpatiallyVarying <- function(v,x) -(1/dt)*v[t-1]*x[t-1]
