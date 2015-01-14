@@ -1,6 +1,7 @@
-springDynamics <- function(twoSpring=FALSE,springFUN='Hookes',waterFun='Constant') {
-    resistanceFUN   = match.fun(springFUN)
-    forcingFun      = match.fun(waterFun )
+springDynamics <- function(twoSpring=FALSE,springFUN='Hookes',waterFun='Constant',visocityFun='None') {
+    resistanceFUN   = match.fun(springFUN  )
+    forcingFun      = match.fun(waterFun   )
+    viscousFun      = match.fun(visocityFun)
     
     leaf=x=v=vx=vy=a=rep(0,nt)
 
@@ -11,10 +12,8 @@ springDynamics <- function(twoSpring=FALSE,springFUN='Hookes',waterFun='Constant
         Fr=resistanceFUN(x[t-1])
         if (twoSpring) Fr=Fr-resistanceFUN(-x[t-1])
         
-        if (x<Fw) Fv=-(1/dt)*v[t-1]*x[t-1] else Fv=0
-        #Fv=-(1/dt)*v[t-1]*x[t-1]
+        Fv=viscousFun(v);
         
-        #if (t==10) browser()
         F=Fwx+Fr+Fv
         a[t]=F/m
         v[t]=v[t-1]+a[t]*dt
@@ -24,7 +23,12 @@ springDynamics <- function(twoSpring=FALSE,springFUN='Hookes',waterFun='Constant
         if (x[t]<=0) x[t]=v[t]=0
         
     }
-
-    plotPhen(1:nt,list(x,v,a),paste(springFUN,waterFun,c("1 spring","2 spring")[twoSpring+1]))
+    
+    titl=paste("Spring:"       ,springFUN,
+             c("Single Spring","Double Spring")[twoSpring+1],
+          ";   Water Forcing: ",waterFun,
+          ";   Viscocity: "    ,visocityFun)
+            
+    plotPhen(1:nt,list(x,v,a),titl)
 }
 

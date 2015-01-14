@@ -1,14 +1,22 @@
-source("libs/plotPhen.r")
-source("libs/springDynamics.r")
-source("springs/Hookes.r")
-source("forcing/constant.r")
-source("forcing/dampend.r")
+##########################################################################################
+## cfg                                                                                  ##
+##########################################################################################
+library(gitProjectExtras)
+sourceAllLibs()
+sourceAllLibs("springs")
+sourceAllLibs("forces/forcing")
+sourceAllLibs("forces/springs")
+sourceAllLibs("forces/viscous")
 
-source("springs/exponentialSpring.r")
-
+##########################################################################################
+## Set up parameters                                                                    ##
+##########################################################################################
 nt=400; dt=0.1;
 Fw=1; m=1; k=1;
 
+##########################################################################################
+## Open Figure                                                                          ##
+##########################################################################################
 pdf("Springs.pdf",height=12,width=12)
 par(mfrow=c(4,2))
 
