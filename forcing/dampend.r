@@ -1,0 +1,1 @@
+Dampend <- function(x) Fw*max(c(1-x,0))
