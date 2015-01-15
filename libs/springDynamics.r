@@ -1,4 +1,6 @@
-springDynamics <- function(twoSpring=FALSE,springFUN='Hookes',waterFun='Constant',visocityFun='None') {
+springDynamics <- function(twoSpring=FALSE,
+                           springFUN='Hookes',waterFun='Constant',visocityFun='None',
+                           ...) {
     
     ##############################
     ## Setup & Initialize       ##
@@ -43,6 +45,6 @@ springDynamics <- function(twoSpring=FALSE,springFUN='Hookes',waterFun='Constant
           ";   Water Forcing: ",waterFun,
           ";   Viscocity: "    ,visocityFun)
             
-    plotPhen(1:nt,list(x,v,a,F,Fwx,Fr,Fv),titl)
+    plotPhen(1:nt,list(leaf,v,a,F,Fwx,Fr,Fv),titl,...)
 }
 
