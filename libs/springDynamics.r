@@ -12,7 +12,7 @@ springDynamics <- function(twoSpring=FALSE,
     leaf=v=a=F=Fwx=Fr=Fv=rep(0,nt)
 
     ##############################
-    ## Calculate               ##
+    ## Calculate                ##
     ##############################
     for (t in 2:nt) {
         ## Current water force
@@ -38,7 +38,7 @@ springDynamics <- function(twoSpring=FALSE,
     }
     
     ##############################
-    ## Plot       ##
+    ## Plot                     ##
     ##############################
     titl=paste("Spring:"       ,springFUN,
              c("Single Spring","Double Spring")[twoSpring+1],
