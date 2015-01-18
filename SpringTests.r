@@ -7,7 +7,8 @@ sourceAllLibs("springs")
 sourceAllLibs("forces/forcing")
 sourceAllLibs("forces/springs")
 sourceAllLibs("forces/viscous")
-mkDir("figs/")
+source("springDynamics.r")
+makeDir("figs/")
 
 ##########################################################################################
 ## Set up parameters                                                                    ##
