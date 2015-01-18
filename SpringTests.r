@@ -7,6 +7,7 @@ sourceAllLibs("springs")
 sourceAllLibs("forces/forcing")
 sourceAllLibs("forces/springs")
 sourceAllLibs("forces/viscous")
+mkDir("figs/")
 
 ##########################################################################################
 ## Set up parameters                                                                    ##
@@ -23,7 +24,7 @@ ltys=c(1,1,1,1,2,3,4)
 ##########################################################################################
 ## Open Figure                                                                          ##
 ##########################################################################################
-pdf("Springs.pdf",height=18,width=18)
+pdf("figs/Springs.pdf",height=18,width=18)
 lmat=matrix(1:(6*4),6,4)
 lmat=rbind(lmat,rep((6*4)+1,4))
 layout(lmat,height=c(rep(1,6),0.7))
