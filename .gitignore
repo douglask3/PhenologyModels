@@ -4,6 +4,8 @@
 # Example code in package build process
 *-Ex.R
 
+data/
+.gitignore
 # R data files from past sessions
 .Rdata
 
