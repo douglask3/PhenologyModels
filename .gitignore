@@ -5,8 +5,11 @@
 # Example code in package build process
 *-Ex.R
 
+# Stuff not to push
 data/
 .gitignore
+*.pdf
+
 # R data files from past sessions
 .Rdata
 

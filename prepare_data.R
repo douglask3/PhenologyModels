@@ -30,7 +30,7 @@ if (file.exists(outFile)) read.csv(outFile) else {
 
     ecdata_daily <- aggregate( cbind(Sws_Con,X250m_16_days_NDVI_new_smooth)~Day+Month+Year, data=ecdata, mean)
 
-    write.csv(ecdata_daily,outFile)
+    write.csv(ecdata_daily, outFile, row.names=F)
 }
 
 plot( ecdata[,184], type='l', col='red' )

@@ -16,9 +16,10 @@ class spring(object):
 
     def __init__(self, time):
         self.mass = 1
-        self.force_water = 1
+        self.force_envir = 1
         self.dt = 0.01
         self.k_hooke = 1
+        self.k_drag = 2
         self.time = time
 
     def hookes_law(self, x):
@@ -33,27 +34,28 @@ class spring(object):
 
         # instantaneous vectors
         for t in range(self.time-1):
+            force_drag = -self.k_drag*veloc[t]
             force_resist = self.hookes_law( displ[t] )
-            force_total = self.force_water + force_resist
+            force_total = self.force_envir + force_resist + force_drag
             accel[t+1] = force_total/self.mass
-            veloc[t+1] = veloc[t] + accel[t]*self.dt
-            displ[t+1] = displ[t] + veloc[t]*self.dt
+            veloc[t+1] = veloc[t] + accel[t+1]*self.dt
+            displ[t+1] = displ[t] + veloc[t+1]*self.dt
 
         # return wave as tuple
-        motion = (force_total, accel, veloc, displ)
+        motion = (accel, veloc, displ)
         return motion
 
     def plot_spring_dynamics(self):
         motion = self.dynamic()
-        pcolors = cm.rainbow( np.linspace(0,1,len(motion)))
-        siglabs = [ r'$F_{tot}(t)$', r'$a(t)$', r'$v(t)$', r'$x(t)$']
+        pcolors = cm.rainbow( np.linspace(0,0.5,len(motion)))
+        siglabs = [ r'$a(t)$', r'$v(t)$', r'$x(t)$']
 
-        plt.figure()
+        fig = plt.figure( figsize=(8,4) )
         for i in range( len(motion) ):
             plt.plot( motion[i], color=pcolors[i],
                             label=siglabs[i], linestyle='-', lw=2 )
         plt.legend( loc=1 )
-        #fig.set_xlabel( r'$time (t)$', fontsize=14 )
+        #ax.set_xlabel( r'$time (t)$', fontsize=14 )
         #fig.set_ylabel( r'vector$', fontsize=14 )
         plt.savefig("pendulum_sig.pdf")
 
