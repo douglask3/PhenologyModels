@@ -4,10 +4,13 @@ outFile <- 'outputs/ecDaily.csv'
 
 if (file.exists(outFile)) read.csv(outFile) else {
 
-    ecdata <- sqldf::read.csv.sql(file=SturtPlainsFile,
+    testFast=try(ecdata <- sqldf::read.csv.sql(file=SturtPlainsFile,
            sql="SELECT * FROM file",
            header=T, row.names=NULL, 
-           filter = list('gawk -f prog', prog = '{ gsub(/"/, ""); print }'))
+           filter = list('gawk -f prog', prog = '{ gsub(/"/, ""); print }')))
+    
+    if (class(yay)=="try-error")
+        ecdata <- read.csv(file=SturtPlainsFile,header=T, row.names=NULL)
 
     for( i in 1:length(names(ecdata))){
 	    ecn <- names(ecdata)
@@ -33,4 +36,6 @@ if (file.exists(outFile)) read.csv(outFile) else {
     write.csv(ecdata_daily,outFile)
 }
 
-plot( ecdata[,184], type='l', col='red' )
+x=ecdata_daily[,3]+ecdata_daily[,1]/365
+y=(ecdata_daily[m,4:5]
+plotPhen(x,y)

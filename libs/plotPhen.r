@@ -1,4 +1,6 @@
-plotPhen <- function(x,y,title,cols=rainbow(length(x)),ltys=1) {
+plotPhen <- function(x,y,title,cols=rainbow(length(y)),ltys=1) {
+    if (class(y)!='list') y=matrix2list(y)
+
     rx=range(x)
     ry=range(y)
     
