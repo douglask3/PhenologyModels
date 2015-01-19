@@ -18,12 +18,14 @@ springDynamics <- function(twoSpring=FALSE,
         ## Current water force
         Fwx[t]=forcingFun(leaf[t-1])
         
+        if (t >200) Fwx[t]=0
+        
         ## resistance force
         Fr[t]=resistanceFUN(leaf[t-1])
         if (twoSpring) Fr[t]=Fr[t]-resistanceFUN(-leaf[t-1])
         
         ## viscous force
-        Fv[t]=viscousFun(v[t-1],leaf[t-1]);
+        Fv[t]=0.1*viscousFun(v[t-1],leaf[t-1]);
         F[t]=Fwx[t]+Fr[t]+Fv[t]
         
         ## accleration on intertia
@@ -33,6 +35,8 @@ springDynamics <- function(twoSpring=FALSE,
         ## fraction leafs on
         leaf[t]=leaf[t-1]+min(c(1,v[t]*dt))
         
+        
+        if (leaf[t]>1) leaf[t]=1
         if (leaf[t]<=0) leaf[t]=v[t]=0
         
     }
