@@ -1,12 +1,9 @@
 #!/usr/bin/env Rscript
 
-# set wd
-setwd("~/Work/Research_Work/Savanna_Project/Data/ADVANCED RESULTS/")
+source("cfg.r")
 
-ecdata  <- sqldf::read.csv.sql(file="SturtPlains/Advanced_processed_data_SturtPlains_v11b.csv", 
-           sql="SELECT * FROM file",
-           header=T, row.names=NULL, 
-           filter = list('gawk -f prog', prog = '{ gsub(/"/, ""); print }'))
+ecdata  <- read.csv(file=SturtPlainsFile,
+           header=T, row.names=NULL)
 
 for( i in 1:length(names(ecdata))){
     ecn <- names(ecdata)
@@ -14,16 +11,16 @@ for( i in 1:length(names(ecdata))){
 }
 
 isplitstr <- function(x,f,...) t(sapply(x,function(i,...) strsplit(i,...)[[1]],f,...))
-datetime <- isplitstr( ecdata$DT, " " )
-date <- isplitstr( datetime[,1], "-" )
-time <- isplitstr( datetime[,2], ":" )
+datetime  <- isplitstr( ecdata$DT, " " )
+date      <- isplitstr( datetime[,1], "-" )
+time      <- isplitstr( datetime[,2], ":" )
 
 # reapply time columns
-ecdata$Year <- as.numeric(date[,1])
+ecdata$Year  <- as.numeric(date[,1])
 ecdata$Month <- as.numeric(date[,2])
-ecdata$Day <- as.numeric(date[,3])
+ecdata$Day   <- as.numeric(date[,3])
 
-ecdata$Hour <- as.numeric(time[,1])
+ecdata$Hour   <- as.numeric(time[,1])
 ecdata$Minute <- as.numeric(time[,2])
 ecdata$Second <- as.numeric(time[,3])
 
