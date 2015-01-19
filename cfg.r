@@ -6,8 +6,8 @@ sourceAllLibs()
 ## Download Data                                                                        ##
 ##########################################################################################
 
-SturPlainsUrl  = 'http://bio.mq.edu.au/bcd/dingo/DINGO%20OUTPUTS/SturtPlains/'
-SturPlainsFile = 'Advanced_processed_data_SturtPlains_v11b.csv'
+SturtPlainsUrl  = 'http://bio.mq.edu.au/bcd/dingo/DINGO%20OUTPUTS/SturtPlains/'
+SturtPlainsFile = 'Advanced_processed_data_SturtPlains_v12.csv'
 
 
-SturPlainsFile = download.data(SturPlainsUrl,SturPlainsFile)
+SturtPlainsFile = download.data(SturtPlainsUrl,SturtPlainsFile)
