@@ -1,14 +1,14 @@
 ##########################################################################################
 ## cfg                                                                                  ##
 ##########################################################################################
-library(gitProjectExtras)
-sourceAllLibs()
+source("cfg.r")
+
 sourceAllLibs("springs")
 sourceAllLibs("forces/forcing")
 sourceAllLibs("forces/springs")
 sourceAllLibs("forces/viscous")
 source("springDynamics.r")
-makeDir("figs/")
+
 
 ##########################################################################################
 ## Set up parameters                                                                    ##
