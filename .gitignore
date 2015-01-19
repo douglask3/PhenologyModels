@@ -9,3 +9,12 @@
 
 # RStudio files
 .Rproj.user/
+
+# Data files
+data/*
+
+# Generated files
+*.pdf
+*.png
+figs/*
+outputs/*
