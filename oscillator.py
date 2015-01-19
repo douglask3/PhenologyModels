@@ -62,5 +62,3 @@ tseries = 2000
 x = spring( tseries )
 motion = x.dynamic()
 x.plot_spring_dynamics()
-
-
