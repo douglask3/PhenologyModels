@@ -1,6 +1,7 @@
 library(gitProjectExtras)
 setupProjectStructure()
 sourceAllLibs()
+installSource('pastecs')
 
 dataDir         = 'data/'
 
