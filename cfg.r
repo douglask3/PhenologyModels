@@ -1,7 +1,7 @@
 library(gitProjectExtras)
 setupProjectStructure()
 sourceAllLibs()
-installSource('pastecs')
+lapply(c('pastecs','zoo'),installSource)
 
 dataDir         = 'data/'
 
