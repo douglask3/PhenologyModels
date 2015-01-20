@@ -34,9 +34,12 @@ ndvi.raw    <- aggregate( NDVI250X~Year, ecdata, range )
 ndvi.range  <- as.data.frame(cbind(ndvi.raw[,1],ndvi.raw[,2]))
 names(ndvi.range) <- c("Year","Min","Max")
 
+#================================================================================
+# Fit data with a set of models
+#================================================================================
+
 # Need to find soil water content values for min and max NDVI for each year
-force.env <- subset( ecdata, (NDVI250X%in%ndvi.range$Min | NDVI250X%in%ndvi.range$Max) & NDVI250X>0, 
-                   select=c(SWC10,NDVI250X) )
+force.env <-ecdata[tps,c('SWC10','NDVI250X')]
 
 # Set global X & Y variables (I know...)
 yndvi   <- ndvi[tps]
@@ -53,38 +56,20 @@ fenv <- function( swc, k, linear=T ) {
 }
 
 
-
-#================================================================================
 # Linear
-#================================================================================
-
-# Cost function for determining global minimum (assuming IID ~ sigma=1)
-fmin.lin <- function( k ) {
-    res <- (yndvi-fenv(xswc,k))^2
-    return( sum(res) )
-}
-# Find linear optimal solution 
-res.lin <- optim( list(k=1), fmin.lin, method="Nelder-Mead", hessian=T )
-
-
-#================================================================================
-# Nonlinear
-#================================================================================
-
-# Cost function for determining global minimum (assuming IID ~ sigma=1)
-fmin.nolin <- function( k ) {
-    res <- (yndvi-fenv(xswc,k,linear=F))^2
-    return( sum(res) )
-}
-# Find linear optimal solution 
-res.nolin <- optim( list(k=1), fmin.nolin, method="Nelder-Mead", hessian=T )
+res.lin <- nls( NDVI250X~k*SWC10, data=force.env, start=list(k=1) )
+# Nonlinear (asymptote - NDVI can be negative)
+res.nol <- nls( NDVI250X~SWC10/(k+SWC10), data=force.env, start=list(k=1) )
+# Nonlinear (sigmoid - NDVI must be positive)
+res.sig <- nls( NDVI250X~s+1/(1+exp(k*(SWC10))), data=force.env, start=list(s=0,k=1) )
 
 
 #================================================================================
 # Results
 #================================================================================
 
-par.out <- data.frame( Models=c("Linear","Nonlinear"), k=c(res.lin$par, res.nolin$par) )
+get.par <- function(object) summary(object)[10][[1]][1]
+par.out <- data.frame( Models=c("Linear","Nonlinear","Sigmoid"), k=sapply( list(res.lin, res.nol, res.sig), get.par) )
 write.table( par.out, file=FeoutFile, row.names=F, sep="," )
 
 # Plot the data
@@ -94,17 +79,20 @@ pdf(file=outPlot, width=4.5, height=4)
     plot( xswc, yndvi, pch=19, col="black", xlab="", ylab="", las=1, ylim=c(0,0.7), xlim=c(0,0.3) )
     
     # calc model
-    xmod <- seq(-0.1,0.4,0.01)
-    ylin <- fenv(xmod, res.lin$par)
-    ynol <- fenv(xmod, res.nolin$par, linear=F)
-    # plot models
-    lines( xmod, ylin, col='red', lwd=3 )
-    lines( xmod, ynol, col='orange', lwd=3 )
+    xmod <- seq(-0.1, 0.4, 0.01)
+    # plot model
+    lines( xmod, predict(res.lin, list(SWC10=xmod)), col='red'   , lwd=3 )
+    lines( xmod, predict(res.nol, list(SWC10=xmod)), col='orange', lwd=3 )
+    lines( xmod, predict(res.sig, list(SWC10=xmod)), col='purple', lwd=3 )
+
     # labels
     mtext( expression(theta[soil]), side=1, line=2.5, cex=1.2 )
     mtext( expression(NDVI), side=2, line=2.7, cex=1. )
     # legend
     legend( "bottomright", 
-           c(expression(NDVI==k*theta[s]), expression(NDVI==theta[s]/(k+theta[s]))),
-           col=c("red","orange"), lwd=3, pch=-1, cex=0.8 )
+           c(expression(k*theta[s]), 
+             expression(theta[s]/(k+theta[s])),
+             expression(n+1/(1+exp(-k*theta[s])))
+             ),
+           col=c("red","orange","purple"), lwd=3, pch=-1, cex=0.8 )
 dev.off()
