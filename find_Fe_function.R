@@ -2,7 +2,7 @@
 
 # Where to save the output PDF for the preliminary fitting
 outFile <- "outputs/Fe_k_Table.csv"
-outPlot <- "outputs/Fe_from_NDVI_and_SWC.pdf"
+outPlot <- "figs/Fe_from_NDVI_and_SWC.pdf"
 
 # Analysis parameters
 swcRollingMean <- 30
