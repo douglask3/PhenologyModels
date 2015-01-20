@@ -2,14 +2,14 @@
 source("cfg.r")
 outFile <- 'outputs/ecDaily.csv'
 
-if (file.exists(outFile)) read.csv(outFile) else {
+if (file.exists(outFile)) ecdata <- read.csv( file="outputs/ecDaily.csv", header=T, sep="," ) else {
 
     testFast=try(ecdata <- sqldf::read.csv.sql(file=SturtPlainsFile,
            sql="SELECT * FROM file",
            header=T, row.names=NULL, 
            filter = list('gawk -f prog', prog = '{ gsub(/"/, ""); print }')))
     
-    if (class(yay)=="try-error")
+    if (class(testFast)=="try-error")
         ecdata <- read.csv(file=SturtPlainsFile,header=T, row.names=NULL)
 
     for( i in 1:length(names(ecdata))){
@@ -31,11 +31,9 @@ if (file.exists(outFile)) read.csv(outFile) else {
     ecdata$Minute <- get.tindex(time,2)
     ecdata$Second <- get.tindex(time,3)
 
-    ecdata_daily <- aggregate( cbind(Sws_Con,X250m_16_days_NDVI_new_smooth)~Day+Month+Year, data=ecdata, mean)
+    ecdata <- aggregate( cbind(Sws_Con,X250m_16_days_NDVI_new_smooth)~Day+Month+Year, data=ecdata, mean)
 
-    write.csv(ecdata_daily, outFile, row.names=F)
+    write.csv(ecdata, outFile, row.names=F)
 }
 
-x=ecdata_daily[,3]+ecdata_daily[,1]/365
-y=(ecdata_daily[m,4:5]
-plotPhen(x,y)
+
