@@ -4,13 +4,24 @@
 outFile <- "outputs/Fe_k_Table.csv"
 outPlot <- "outputs/Fe_from_NDVI_and_SWC.pdf"
 
+# Analysis parameters
+swcRollingMean <- 30
+
 # Import our trimmed-down Sturt Plains dataset
 ecdata <- read.csv( file="outputs/ecDaily.csv", header=T, sep="," )
 names(ecdata) <- c("Day","Month","Year","SWC10","NDVI250X")
 
-# There's probably a better way to extract these points
+swc  = rollmean(ecdata$SWC10,swcRollingMean)
+ndvi = ecdata$NDVI250X[1:length(swc)]
 
-#turnpoints()
+
+# Fine turning points
+tps=summary(turnpoints(ndvi))$tppos
+dswc=apply(rbind(swc[tps-1],swc[tps+1]),2,diff)
+
+browser()
+
+# There's probably a better way to extract these points
 
 
 ndvi.raw    <- aggregate( NDVI250X~Year, ecdata, range )
