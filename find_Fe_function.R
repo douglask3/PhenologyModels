@@ -9,6 +9,10 @@ ecdata <- read.csv( file="outputs/ecDaily.csv", header=T, sep="," )
 names(ecdata) <- c("Day","Month","Year","SWC10","NDVI250X")
 
 # There's probably a better way to extract these points
+
+#turnpoints()
+
+
 ndvi.raw    <- aggregate( NDVI250X~Year, ecdata, range )
 ndvi.range  <- as.data.frame(cbind(ndvi.raw[,1],ndvi.raw[,2]))
 names(ndvi.range) <- c("Year","Min","Max")
@@ -72,11 +76,11 @@ with( force.env, {
     })
     # calc model
     xmod <- seq(-0.1,0.4,0.01)
-    ylin <- fenv(xs, res.lin$par)
-    ynol <- fenv(xs, res.nolin$par, linear=F)
-    # plot model
-    lines( xs, ylin, col='red', lwd=3 )
-    lines( xs, ynol, col='orange', lwd=3 )
+    ylin <- fenv(xmod, res.lin$par)
+    ynol <- fenv(xmod, res.nolin$par, linear=F)
+    # plot models
+    lines( xmod, ylin, col='red', lwd=3 )
+    lines( xmod, ynol, col='orange', lwd=3 )
     # labels
     mtext( expression(theta[soil]), side=1, line=2.5, cex=1.2 )
     mtext( expression(NDVI), side=2, line=2.7, cex=1. )
