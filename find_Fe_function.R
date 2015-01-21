@@ -11,10 +11,11 @@ swcAllowedGrad <- 1E-3
 # Import our trimmed-down Sturt Plains dataset
 source("prepare_data.R")
 names(ecdata) <- c("Day","Month","Year","SWC10","NDVI250X")
+ecdata$NDVI250X = ecdata$NDVI250X-min(ecdata$NDVI250X)+0.001
 
 swc  = rollmean(ecdata$SWC10,swcRollingMean)
 ndvi = ecdata$NDVI250X[1:length(swc)]
-ndvi = ndvi - min(ndvi)
+
 
 # Fine turning points
 tps      = (turnpoints(ndvi))
@@ -56,7 +57,7 @@ res.lin <- nls( NDVI250X~k*SWC10, data=force.env, start=list(k=1) )
 res.nol <- nls( NDVI250X~SWC10/(k+SWC10), data=force.env, start=list(k=1) )
 # Nonlinear (sigmoid - NDVI must be positive)
 res.sig <- nls( NDVI250X~1/(1+exp(k*SWC10-s)), data=force.env, start=list(s=0,k=-1) )
-
+res.exp <- nls( NDVI250X~b*exp(k*SWC10)-s, data=force.env, start=list(b=1,s=1,k=1))
 
 #================================================================================
 # Results
@@ -78,7 +79,7 @@ pdf(file=outPlot, width=4.5, height=4)
     lines( xmod, predict(res.lin, list(SWC10=xmod)), col='red'   , lwd=3 )
     lines( xmod, predict(res.nol, list(SWC10=xmod)), col='orange', lwd=3 )
     lines( xmod, predict(res.sig, list(SWC10=xmod)), col='purple', lwd=3 )
-
+    lines( xmod, predict(res.exp, list(SWC10=xmod)), col='blue'  , lwd=3 )
     # labels
     mtext( expression(theta[soil]), side=1, line=2.5, cex=1.2 )
     mtext( expression(NDVI), side=2, line=2.7, cex=1. )
@@ -86,8 +87,8 @@ pdf(file=outPlot, width=4.5, height=4)
     legend( "bottomright", 
            c(expression(k*theta[s]), 
              expression(theta[s]/(k+theta[s])),
-             expression(1/(1+exp(-k*theta[s]-n)))
-
+             expression(1/(1+exp(-k*theta[s]-n))),
+             expression(exp(-k*theta[s]))
              ),
            col=c("red","orange","purple"), lwd=3, pch=-1, cex=0.8 )
 dev.off()
