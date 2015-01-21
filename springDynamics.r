@@ -1,54 +1,40 @@
-springDynamics <- function(twoSpring=FALSE,
-                           springFUN='Hookes',waterFun='Constant',visocityFun='None',
-                           ...) {
+springDynamics <- function(Fe,r=1,d=1,returnFull=FALSE) {
     
     ##############################
     ## Setup & Initialize       ##
-    ##############################
-    resistanceFUN   = match.fun(springFUN  )
-    forcingFun      = match.fun(waterFun   )
-    viscousFun      = match.fun(visocityFun)
+    ##############################    
+    vectors=forces=matrix(0,ncol=3)
+    colnames(vectors) = c('a', 'v',  'x' )
+    colnames(forces ) = c('F', 'Fr', 'Fd')
+    x=v=0
     
-    leaf=v=a=F=Fwx=Fr=Fv=rep(0,nt)
-
     ##############################
     ## Calculate                ##
     ##############################
-    for (t in 2:nt) {
-        ## Current water force
-        Fwx[t]=forcingFun(leaf[t-1])
-        
-        if (t >200) Fwx[t]=0
-        
+    for (t in 2:length(Fe)) {
         ## resistance force
-        Fr[t]=resistanceFUN(leaf[t-1])
-        if (twoSpring) Fr[t]=Fr[t]-resistanceFUN(-leaf[t-1])
+        Fr = -r * x
+        Fd = -d * v
+        F  = Fe[t] + Fr + Fd
         
-        ## viscous force
-        Fv[t]=0.1*viscousFun(v[t-1],leaf[t-1]);
-        F[t]=Fwx[t]+Fr[t]+Fv[t]
-        
-        ## accleration on intertia
-        a[t]=F[t]/m
-        v[t]=v[t-1]+a[t]*dt
+        forces = rbind(forces,c(Fe[t],Fr,Fd))
+
+        ## acceleration on intertia
+        a = F
+        v = v + a
         
         ## fraction leafs on
-        leaf[t]=leaf[t-1]+min(c(1,v[t]*dt))
+        x = x + min(c(1,v))
         
-        
-        if (leaf[t]>1) leaf[t]=1
-        if (leaf[t]<=0) leaf[t]=v[t]=0
-        
+        if (x > 1) {
+            x=1
+            v=0
+        }
+        if (x <=0) x = v = 0
+
+        vectors = rbind(vectors, c(a,v,x))
     }
-    
-    ##############################
-    ## Plot                     ##
-    ##############################
-    titl=paste("Spring:"       ,springFUN,
-             c("Single Spring","Double Spring")[twoSpring+1],
-          ";   Water Forcing: ",waterFun,
-          ";   Viscocity: "    ,visocityFun)
-            
-    plotPhen(1:nt,list(leaf,v,a,F,Fwx,Fr,Fv),titl,...)
+    if (returnFull) return(list(forces,vectors))
+        else return(vectors[,3])
 }
 
