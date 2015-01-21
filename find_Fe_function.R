@@ -6,6 +6,7 @@ outPlot <- "figs/Fe_from_NDVI_and_SWC.pdf"
 
 # Analysis parameters
 swcRollingMean <- 30
+swcAllowedGrad <- 1E-3
 
 # Import our trimmed-down Sturt Plains dataset
 source("prepare_data.R")
@@ -26,7 +27,7 @@ tpsDswc  = sapply(tpsDswc,function(i) {
                   lm(i~x)[[1]][2]
 })
 
-swStable = (tpsType==1 & tpsDswc>=0) | (tpsType==0 & tpsDswc<=0)
+swStable = (tpsType==1 & tpsDswc>=-swcAllowedGrad) | (tpsType==0 & tpsDswc<=swcAllowedGrad)
 tps=tps$tppos[swStable]
 
 #================================================================================
