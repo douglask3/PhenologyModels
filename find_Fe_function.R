@@ -13,7 +13,7 @@ names(ecdata) <- c("Day","Month","Year","SWC10","NDVI250X")
 
 swc  = rollmean(ecdata$SWC10,swcRollingMean)
 ndvi = ecdata$NDVI250X[1:length(swc)]
-
+ndvi = ndvi - min(ndvi)
 
 # Fine turning points
 tps      = (turnpoints(ndvi))
@@ -40,7 +40,6 @@ force.env <-ecdata[tps,c('SWC10','NDVI250X')]
 yndvi   <- ndvi[tps]
 xswc    <- swc[tps]
 
-
 # Function to explain the relationship between Min/Max SWC and NDVI
 fenv <- function( swc, k, linear=T ) {
     if( linear==T ) {
@@ -49,7 +48,6 @@ fenv <- function( swc, k, linear=T ) {
         return(swc/(swc+k))
     }
 }
-
 
 # Linear
 res.lin <- nls( NDVI250X~k*SWC10, data=force.env, start=list(k=1) )
