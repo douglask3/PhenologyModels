@@ -65,7 +65,7 @@ res.exp <- nlsFun( NDVI250X~b*exp(k*SWC10)-s, start=list(b=1,s=1,k=1 ),control=l
 #================================================================================
 
 get.par <- function(object) summary(object)[10][[1]][1]
-par.out <- data.frame( Models=c("Linear","Nonlinear","Sigmoid"), k=sapply( list(res.lin, res.nol, res.sig), get.par) )
+par.out <- data.frame( Models=c("Linear","Nonlinear","Sigmoid","Exp"), k=sapply( list(res.lin, res.nol, res.sig,res.exp), get.par) )
 write.table( par.out, file=FeoutFile, row.names=F, sep="," )
 
 # Plot the data
@@ -91,5 +91,5 @@ pdf(file=outPlot, width=4.5, height=4)
              expression(1/(1+exp(-k*theta[s]-n))),
              expression(exp(-k*theta[s]))
              ),
-           col=c("red","orange","purple"), lwd=3, pch=-1, cex=0.8 )
+           col=c("red","orange","purple",'blue'), lwd=3, pch=-1, cex=0.8 )
 dev.off()
