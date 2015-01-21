@@ -19,17 +19,18 @@ ndvi = ecdata$NDVI250X[1:length(swc)]
 tps      = (turnpoints(ndvi))
 tpsType  = turnpointsType(tps)
 tpsSwc   = swc[tps$tppos]
-tpsDswc  = apply(rbind(swc[tps$tppos+1],swc[tps$tppos-1]),2,diff)
+
+tpsDswc  = lapply(tps[[10]],function(i) swc[(i-7):(i+1)])
+tpsDswc  = sapply(tpsDswc,function(i) {
+                  x <- 1:length(i)
+                  lm(i~x)[[1]][2]
+})
 
 swStable = (tpsType==1 & dswc>=0) | (tpsType==0 & dswc<=0)
-
-
 tps=tps$tppos[swStable]
 
 
 # There's probably a better way to extract these points
-
-
 ndvi.raw    <- aggregate( NDVI250X~Year, ecdata, range )
 ndvi.range  <- as.data.frame(cbind(ndvi.raw[,1],ndvi.raw[,2]))
 names(ndvi.range) <- c("Year","Min","Max")
