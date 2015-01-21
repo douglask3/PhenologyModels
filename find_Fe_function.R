@@ -62,7 +62,7 @@ res.lin <- nls( NDVI250X~k*SWC10, data=force.env, start=list(k=1) )
 # Nonlinear (asymptote - NDVI can be negative)
 res.nol <- nls( NDVI250X~SWC10/(k+SWC10), data=force.env, start=list(k=1) )
 # Nonlinear (sigmoid - NDVI must be positive)
-res.sig <- nls( NDVI250X~s+1/(1+exp(k*(SWC10))), data=force.env, start=list(s=0,k=1) )
+res.sig <- nls( NDVI250X~s+1/(1+exp(k*(SWC10-0.5))), data=force.env, start=list(s=0,k=1) )
 
 
 #================================================================================
