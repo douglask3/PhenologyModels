@@ -10,11 +10,13 @@ swcAllowedGrad <- 1E-3
 
 # Import our trimmed-down Sturt Plains dataset
 source("prepare_data.R")
-names(ecdata) <- c("Day","Month","Year","SWC10","NDVI250X")
-ecdata$NDVI250X = ecdata$NDVI250X-min(ecdata$NDVI250X)+0.001
+names(ecdata)   <- c("Day","Month","Year","SWC10","NDVI250X")
+ecdata$NDVI250X <- ecdata$NDVI250X-min(ecdata$NDVI250X)+0.001
+ecdata$SWC10    <- rollmean(ecdata$SWC10 ,swcRollingMean,na.pad=TRUE,align='right')
+ecdata          <- tail(ecdata,-(swcRollingMean-1))
 
-swc  = rollmean(ecdata$SWC10,swcRollingMean)
-ndvi = ecdata$NDVI250X[1:length(swc)]
+swc  = ecdata$SWC10
+ndvi = ecdata$NDVI250X
 
 
 # Fine turning points
