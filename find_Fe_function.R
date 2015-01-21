@@ -51,13 +51,14 @@ fenv <- function( swc, k, linear=T ) {
     }
 }
 
+nlsFun <- function(form,nlsFun=nls,...) nlsFun(form, data=force.env,...)
 # Linear
-res.lin <- nls( NDVI250X~k*SWC10, data=force.env, start=list(k=1) )
+res.lin <- nlsFun( NDVI250X~k*SWC10, start=list(k=1) )
 # Nonlinear (asymptote - NDVI can be negative)
-res.nol <- nls( NDVI250X~SWC10/(k+SWC10), data=force.env, start=list(k=1) )
+res.nol <- nlsFun( NDVI250X~SWC10/(k+SWC10), start=list(k=1) )
 # Nonlinear (sigmoid - NDVI must be positive)
-res.sig <- nls( NDVI250X~1/(1+exp(k*SWC10-s)), data=force.env, start=list(s=0,k=-1) )
-res.exp <- nls( NDVI250X~b*exp(k*SWC10)-s, data=force.env, start=list(b=1,s=1,k=1))
+res.sig <- nlsFun( NDVI250X~1/(1+exp(k*SWC10-s)), start=list(s=0,k=-1) )
+res.exp <- nlsFun( NDVI250X~b*exp(k*SWC10)-s, start=list(b=1,s=1,k=1 ),control=list(minFactor=1E-5,maxiter=1000))
 
 #================================================================================
 # Results
