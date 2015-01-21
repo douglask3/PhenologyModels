@@ -26,14 +26,8 @@ tpsDswc  = sapply(tpsDswc,function(i) {
                   lm(i~x)[[1]][2]
 })
 
-swStable = (tpsType==1 & dswc>=0) | (tpsType==0 & dswc<=0)
+swStable = (tpsType==1 & tpsDswc>=0) | (tpsType==0 & tpsDswc<=0)
 tps=tps$tppos[swStable]
-
-
-# There's probably a better way to extract these points
-ndvi.raw    <- aggregate( NDVI250X~Year, ecdata, range )
-ndvi.range  <- as.data.frame(cbind(ndvi.raw[,1],ndvi.raw[,2]))
-names(ndvi.range) <- c("Year","Min","Max")
 
 #================================================================================
 # Fit data with a set of models
