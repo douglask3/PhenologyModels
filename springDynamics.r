@@ -3,7 +3,7 @@ springDynamics <- function(Fe,r=1,d=1,returnFull=FALSE,dt=(1/10),initial=0) {
     ##############################
     ## Setup & Initialize       ##
     ##############################    
-    vectors=forces=matrix(0,ncol=3)
+    vectors=forces=matrix(0,ncol=3,nrow=0)
     colnames(vectors) = c('a', 'v',  'x' )
     colnames(forces ) = c('F', 'Fr', 'Fd')
     x=v=initial
@@ -11,7 +11,7 @@ springDynamics <- function(Fe,r=1,d=1,returnFull=FALSE,dt=(1/10),initial=0) {
     ##############################
     ## Calculate                ##
     ##############################
-    for (t in 2:length(Fe)) {
+    for (t in 1:length(Fe)) {
         ## resistance force
         Fr = -r * x
         Fd = -d * v
