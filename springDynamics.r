@@ -1,4 +1,4 @@
-springDynamics <- function(Fe,r=1,d=1,returnFull=FALSE) {
+springDynamics <- function(Fe,r=1,d=1,returnFull=FALSE,dt=(1/10),initial=0) {
     
     ##############################
     ## Setup & Initialize       ##
@@ -6,7 +6,7 @@ springDynamics <- function(Fe,r=1,d=1,returnFull=FALSE) {
     vectors=forces=matrix(0,ncol=3)
     colnames(vectors) = c('a', 'v',  'x' )
     colnames(forces ) = c('F', 'Fr', 'Fd')
-    x=v=0
+    x=v=initial
     
     ##############################
     ## Calculate                ##
@@ -21,10 +21,10 @@ springDynamics <- function(Fe,r=1,d=1,returnFull=FALSE) {
 
         ## acceleration on intertia
         a = F
-        v = v + a
+        v = v + a*dt
         
         ## fraction leafs on
-        x = x + min(c(1,v))
+        x = x + min(c(1,v*dt))
         
         if (x > 1) {
             x=1
